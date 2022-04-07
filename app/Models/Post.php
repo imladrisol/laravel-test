@@ -40,6 +40,20 @@ class Post
     }
 
     /**
+     * @param $slug
+     * @return mixed
+     * @throws \Exception
+     */
+    public static function findOrFail($slug)
+    {
+        $post = static::find($slug);
+        if (!$post) {
+            throw new ModelNotFoundException();
+        }
+        return $post;
+    }
+
+    /**
      * @return mixed
      * @throws \Exception
      */
