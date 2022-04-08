@@ -2,72 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\File;
-use Spatie\YamlFrontMatter\YamlFrontMatter;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Post
+class Post extends Model
 {
-    public $excerpt;
-    public $title;
-    public $body;
-    public $date;
-    public $slug;
+    use HasFactory;
 
-    /**
-     * @param $excerpt
-     * @param $title
-     * @param $body
-     * @param $date
-     */
-    public function __construct($excerpt, $title, $body, $date, $slug)
-    {
-        $this->excerpt = $excerpt;
-        $this->title = $title;
-        $this->body = $body;
-        $this->date = $date;
-        $this->slug = $slug;
-    }
-
-    /**
-     * @param $slug
-     * @return mixed
-     * @throws \Exception
-     */
-    public static function find($slug)
-    {
-       return static::all()->firstWhere('slug', $slug);
-    }
-
-    /**
-     * @param $slug
-     * @return mixed
-     * @throws \Exception
-     */
-    public static function findOrFail($slug)
-    {
-        $post = static::find($slug);
-        if (!$post) {
-            throw new ModelNotFoundException();
-        }
-        return $post;
-    }
-
-    /**
-     * @return mixed
-     * @throws \Exception
-     */
-    public static function all()
-    {
-        return cache()->rememberForever('posts.all', function (){
-            return collect(File::files(resource_path('posts')))
-                ->map(function ($file) {
-                    return YamlFrontMatter::parseFile($file);
-                })
-                ->map(function ($doc) {
-                    return new Post($doc->excerpt, $doc->title, $doc->body(), $doc->date, $doc->slug);
-                })
-                ->sortByDesc('date');
-        });
-    }
+    protected $fillable = ['title', 'body', 'excerpt'];
 }
