@@ -20,7 +20,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('post/{post:slug}', function (Post $post) {//Post::where('slug', $post)->firstOrFail()
+Route::get('post/{post}', function (Post $post) {
     return view('post', [
         'post' => $post
     ]);
