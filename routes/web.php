@@ -17,12 +17,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    DB::listen(function ($query) {
-        logger($query->sql, $query->bindings);//storage->logs->laravel.log -it will be 3 queries for categories
-    });
-
     return view('posts', [
-        'posts' => Post::all()
+        'posts' => Post::with('category')->get()//get all categories in one query
     ]);
 });
 
