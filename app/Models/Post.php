@@ -10,6 +10,7 @@ class Post extends Model
     use HasFactory; // Post::factory()
 
     protected $fillable = ['title', 'slug', 'body', 'excerpt'];
+    protected $with = ['category', 'author'];
 
     public function getRouteKeyName()
     {
