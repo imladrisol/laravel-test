@@ -16,47 +16,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // php artisan migrate:fresh --seed
-        //php artisan db:seed
-        User::truncate();
-        Category::truncate();
-        Post::truncate();
-        $user = User::factory()->create();
-        $personal = Category::create([
-            'name' => 'Personal',
-            'slug' => 'personal',
+        $user = User::factory()->create([
+            'name' => 'John Doe'
         ]);
-        $family = Category::create([
-            'name' => 'Family',
-            'slug' => 'family',
-        ]);
-        $work = Category::create([
-            'name' => 'Work',
-            'slug' => 'work',
-        ]);
-        Post::create([
-            'user_id' => $user->id,
-            'category_id' => $family->id,
-            'title' => 'My Family Post',
-            'slug' => 'family',
-            'excerpt' => 'dskldsdfkh dkf dhfkdh kdsf',
-            'body' => '<p>dfkdjk sdfk  dsfk dfksd kd hksdf</p>'
-        ]);
-        Post::create([
-            'user_id' => $user->id,
-            'category_id' => $work->id,
-            'title' => 'My Work Post',
-            'slug' => 'work',
-            'excerpt' => 'dskldsdfkh dkf dhfkdh kdsf',
-            'body' => '<p>dfkdjk sdfk  dsfk dfksd kd hksdf</p>'
-        ]);
-        Post::create([
-            'user_id' => $user->id,
-            'category_id' => $personal->id,
-            'title' => 'My Personal Post',
-            'slug' => 'personal',
-            'excerpt' => 'dskldsdfkh dkf dhfkdh kdsf',
-            'body' => '<p>dfkdjk sdfk  dsfk dfksd kd hksdf</p>'
+        Post::factory(5)->create([
+            'user_id'=> $user->id
         ]);
     }
 }
