@@ -5,7 +5,9 @@ use App\Http\Controllers\SessionsController;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
+use App\Services\Newsletter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
 use \Mailjet\Resources;
 
 /*
@@ -57,18 +59,10 @@ Route::post('newsletter', function () {
     $attrs = request()->validate([
        'email' => 'required|email'
     ]);
-    $client = new MailchimpMarketing\ApiClient();
-    $client->setConfig([
-        'apiKey' => config('services.mailchimp.key'),
-        'server' => 'us18',
-    ]);
     try{
-        $response = $client->lists->addListMember("907783187a", [
-            'email_address' => $attrs['email'],
-            'status' => 'subscribed'
-        ]);
+        (new Newsletter())->subscribe($attrs['email']);
     } catch (\Exception $e) {
-        throw \Illuminate\Validation\ValidationException::withMessages([
+        throw ValidationException::withMessages([
             'email' => 'This email could not be added to our newsletter list.'
         ]);
     }
