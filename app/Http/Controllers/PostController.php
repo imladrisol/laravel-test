@@ -12,6 +12,9 @@ class PostController extends Controller
     public function create()
     {
         //dd(Gate::allows('admin'));
+        //dd(request()->user()->can('admin'));
+        //dd(request()->user()->cannot('admin'));
+        //dd($this->authorize('admin'));
         return view('posts.create', ['categories' => Category::all()]);
     }
 
