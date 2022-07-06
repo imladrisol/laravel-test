@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionsController;
 use App\Models\Category;
@@ -55,12 +56,12 @@ Route::post('logout', [SessionsController::class, 'destroy'])->middleware('auth'
 Route::get('login', [SessionsController::class, 'create'])->middleware('guest');
 Route::post('sessions', [SessionsController::class, 'store'])->middleware('guest');
 
-Route::post('newsletter', function () {
+Route::post('newsletter', function (Newsletter $newsletter) {
     $attrs = request()->validate([
        'email' => 'required|email'
     ]);
     try{
-        (new Newsletter())->subscribe($attrs['email']);
+        $newsletter->subscribe($attrs['email']);
     } catch (\Exception $e) {
         throw ValidationException::withMessages([
             'email' => 'This email could not be added to our newsletter list.'
