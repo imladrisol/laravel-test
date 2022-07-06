@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionsController;
 use App\Models\Category;
@@ -54,3 +55,5 @@ Route::get('login', [SessionsController::class, 'create'])->middleware('guest');
 Route::post('sessions', [SessionsController::class, 'store'])->middleware('guest');
 
 Route::post('newsletter', NewsletterController::class);
+
+Route::get('admin/posts/create', [PostController::class, 'create'])->middleware('admin');
