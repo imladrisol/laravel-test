@@ -6,10 +6,7 @@ use App\Http\Controllers\SessionsController;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
-use App\Services\Newsletter;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
-use \Mailjet\Resources;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,16 +53,4 @@ Route::post('logout', [SessionsController::class, 'destroy'])->middleware('auth'
 Route::get('login', [SessionsController::class, 'create'])->middleware('guest');
 Route::post('sessions', [SessionsController::class, 'store'])->middleware('guest');
 
-Route::post('newsletter', function (Newsletter $newsletter) {
-    $attrs = request()->validate([
-       'email' => 'required|email'
-    ]);
-    try{
-        $newsletter->subscribe($attrs['email']);
-    } catch (\Exception $e) {
-        throw ValidationException::withMessages([
-            'email' => 'This email could not be added to our newsletter list.'
-        ]);
-    }
-    return redirect('/')->with('success', 'You are now signed up for our newsletter!');
-});
+Route::post('newsletter', NewsletterController::class);
