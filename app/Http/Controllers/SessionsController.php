@@ -21,7 +21,7 @@ class SessionsController extends Controller
     {
         $user = request()->validate([
             'email' => 'required|email',
-            'password' => 'require'
+            'password' => 'required'
         ]);
         if (!auth()->attempt($user)) {
             /*return back()

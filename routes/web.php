@@ -56,5 +56,10 @@ Route::post('sessions', [SessionsController::class, 'store'])->middleware('guest
 
 Route::post('newsletter', NewsletterController::class);
 
-Route::get('admin/posts/create', [PostController::class, 'create'])->middleware('can.admin');
-Route::post('admin/posts', [PostController::class, 'store'])->middleware('can.admin');
+
+Route::middleware('can:admin')->group(function() {
+    Route::resource('admin/posts', PostController::class);
+    /*Route::get('admin/posts/create', [PostController::class, 'create']);
+    Route::post('admin/posts', [PostController::class, 'store']);
+    */
+});
