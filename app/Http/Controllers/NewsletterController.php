@@ -9,11 +9,9 @@ class NewsletterController extends Controller
 {
     public function __invoke(Newsletter $newsletter)
     {
-        $attrs = request()->validate([
-            'email' => 'required|email'
-        ]);
+        request()->validate(['email' => 'required|email']);
         try{
-            $newsletter->subscribe($attrs['email']);
+            $newsletter->subscribe(request('email'));
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
                 'email' => 'This email could not be added to our newsletter list.'
