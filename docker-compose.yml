@@ -32,6 +32,8 @@ services:
     volumes:
       - ./:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./public:/var/www/public:ro
+      - ./storage/app:/var/www/storage/app:ro
     networks:
       - app-network
 
