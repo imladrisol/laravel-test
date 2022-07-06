@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use \Mailjet\Resources;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,3 +52,25 @@ Route::post('register', [RegisterController::class, 'store'])->middleware('guest
 Route::post('logout', [SessionsController::class, 'destroy'])->middleware('auth');
 Route::get('login', [SessionsController::class, 'create'])->middleware('guest');
 Route::post('sessions', [SessionsController::class, 'store'])->middleware('guest');
+
+Route::post('newsletter', function () {
+    $attrs = request()->validate([
+       'email' => 'required|email'
+    ]);
+    $client = new MailchimpMarketing\ApiClient();
+    $client->setConfig([
+        'apiKey' => config('services.mailchimp.key'),
+        'server' => 'us18',
+    ]);
+    try{
+        $response = $client->lists->addListMember("907783187a", [
+            'email_address' => $attrs['email'],
+            'status' => 'subscribed'
+        ]);
+    } catch (\Exception $e) {
+        throw \Illuminate\Validation\ValidationException::withMessages([
+            'email' => 'This email could not be added to our newsletter list.'
+        ]);
+    }
+    return redirect('/')->with('success', 'You are now signed up for our newsletter!');
+});
