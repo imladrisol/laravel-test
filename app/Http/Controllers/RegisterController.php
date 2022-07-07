@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserWasCreated;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -25,6 +24,7 @@ class RegisterController extends Controller
         $user = User::create($attrs);
         //session()->flash('success', 'Your account has been created.');
         auth()->login($user);
+        event(new UserWasCreated($user));
         return redirect('/')->with('success', 'Your account has been created.');
     }
 }

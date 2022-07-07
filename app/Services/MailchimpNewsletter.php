@@ -18,4 +18,24 @@ class MailchimpNewsletter implements Newsletter
                 'status' => 'subscribed'
             ]);
     }
+
+    public function sendEmail(string $email)
+    {
+        $mailchimp = new \MailchimpTransactional\ApiClient();
+        $mailchimp->setApiKey(config('services.mailchimp.mandrill_key'));
+        $msg = '<h1>Congratulations!</h1><p>Your registration is completed</p>';
+        try{
+            $user = new \stdClass();
+            $user->email = $email;
+            $user->type = 'to';
+            $mailchimp->messages->send(['message' => [
+                'from_email' => 'imladrisol@gmail.com',
+                'to' => [$user],
+                'subject' => 'registered',
+                'text' => $msg,
+            ]]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
 }
