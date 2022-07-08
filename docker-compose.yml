@@ -58,6 +58,17 @@ services:
     networks:
       - app-network
 
+  smtp:
+    image: mailhog/mailhog
+    container_name: docker-workspace-smtp
+    logging:
+        driver: 'none'
+    ports:
+      - "8003:1025"
+      - "8100:8025"
+    networks:
+      - app-network
+
 #Docker Networks
 networks:
   app-network:

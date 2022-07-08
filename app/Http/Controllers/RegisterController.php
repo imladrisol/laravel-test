@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\UserWasCreated;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -14,6 +15,7 @@ class RegisterController extends Controller
 
     public function store()
     {
+        DB::beginTransaction();
         $attrs = \request()->validate([
             'name' => 'required|max:255',
             'username' => 'required|max:255|min:3|unique:users,username',
@@ -24,7 +26,14 @@ class RegisterController extends Controller
         $user = User::create($attrs);
         //session()->flash('success', 'Your account has been created.');
         auth()->login($user);
-        event(new UserWasCreated($user));
-        return redirect('/')->with('success', 'Your account has been created.');
+        $msg = 'Your account has been created.';
+        try {
+            event(new UserWasCreated($user));
+        } catch (\Exception $e) {
+            $msg = 'The user wasn\'t created!';
+            DB::rollback();
+        }
+        DB::commit();
+        return redirect('/')->with('success', $msg);
     }
 }

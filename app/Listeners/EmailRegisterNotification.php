@@ -3,9 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\UserWasCreated;
-use App\Services\Newsletter;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Notifications\NewUser;
 
 class EmailRegisterNotification
 {
@@ -16,11 +14,10 @@ class EmailRegisterNotification
      *
      * @return void
      */
-    public function __construct(Newsletter $service)
+    public function __construct()
     {
-        $this->service = $service;
-    }
 
+    }
 
     /**
      * Handle the event.
@@ -30,6 +27,6 @@ class EmailRegisterNotification
      */
     public function handle(UserWasCreated $event)
     {
-        $this->service->sendEmail($event->user->email);
+        $event->user->notify(new NewUser());
     }
 }
