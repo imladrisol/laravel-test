@@ -66,7 +66,7 @@ Route::middleware('can:admin')->group(function() {
 
 Route::get('/queue', function () {
     dispatch(function () {
-       logger('hello');
-   });
+       logger('I have to tell how much I love you');
+   })->delay(now()->addMinutes(2));
    return 'done';
 });
