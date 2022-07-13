@@ -67,6 +67,6 @@ Route::middleware('can:admin')->group(function() {
 
 Route::get('/queue', function () {
     $user = User::first();
-    dispatch(new ReconcileAccount($user));
+    ReconcileAccount::dispatch($user);
    return 'done';
 });
