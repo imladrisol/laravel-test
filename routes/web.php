@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use App\Jobs\ReconcileAccount;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,8 +66,7 @@ Route::middleware('can:admin')->group(function() {
 });
 
 Route::get('/queue', function () {
-    dispatch(function () {
-       logger('I have to tell how much I love you');
-   })->delay(now()->addMinutes(2));
+    $user = User::first();
+    dispatch(new ReconcileAccount($user));
    return 'done';
 });
