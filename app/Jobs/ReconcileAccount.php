@@ -32,11 +32,9 @@ class ReconcileAccount implements ShouldQueue
      *
      * @return void
      */
-    public function handle(Filesystem $file)
+    public function handle(string $string, $next)
     {
-        //throw new \Exception('boom!'); //php artisan queue:work --tries=3
-        $file->put(public_path('testing.txt'), 'I have to tell how much I love you, user: ' . $this->user);
-        //logger('I have to tell how much I love you, user: ' . $this->user);
+        return $next('somethingelse');
     }
 
     public function tags()

@@ -67,6 +67,26 @@ Route::middleware('can:admin')->group(function() {
 
 Route::get('/queue', function () {
     $user = User::first();
-    ReconcileAccount::dispatch($user);
+    ReconcileAccount::dispatch($user)->onQueue('high');
    return 'done';
+});
+
+Route::get('/pipe', function (){
+    $pipeline = app(Illuminate\Pipeline\Pipeline::class);
+    $pipeline->send(' hello    world    ')
+        ->through([
+            function ($string, $next) {
+                $string = ucwords($string);
+                return $next($string);
+            },
+            function ($string, $next) {
+                $string = trim($string);
+                return $next($string);
+            },
+            ReconcileAccount::class
+        ])
+        ->then(function($string){
+            dump($string);
+        });
+    return 'Done';
 });
