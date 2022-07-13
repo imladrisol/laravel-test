@@ -63,3 +63,10 @@ Route::middleware('can:admin')->group(function() {
     Route::post('admin/posts', [PostController::class, 'store']);
     */
 });
+
+Route::get('/queue', function () {
+    dispatch(function () {
+       logger('hello');
+   });
+   return 'done';
+});
